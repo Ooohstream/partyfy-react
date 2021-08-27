@@ -48,7 +48,7 @@ function millisToMinutesAndSeconds(millis) {
 
 /* REACT connection */
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname + '/client/build'));
 
 console.log(__dirname + '/client/build');
 
