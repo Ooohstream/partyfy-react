@@ -48,7 +48,7 @@ function millisToMinutesAndSeconds(millis) {
 
 /* REACT connection */
 
-app.use(express.static("client\\build"));
+app.use(express.static("client\build"));
 
 /* OR */
 
@@ -166,7 +166,7 @@ app.get("/callback", (req, res) => {
 
   /* Redirect to home page */
 
-  res.redirect("http://192.168.1.65:5000");
+  res.redirect(`${process.env.adress}`);
 });
 
 /* Get a list of objects 
