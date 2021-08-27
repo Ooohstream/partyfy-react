@@ -50,7 +50,7 @@ function millisToMinutesAndSeconds(millis) {
 
 app.use(express.static(__dirname));
 
-console.log(__dirname + 'client\\build');
+console.log(__dirname + '/client/build');
 
 /* OR */
 
