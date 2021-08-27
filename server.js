@@ -1,7 +1,6 @@
 /* express installation */
 
 const express = require("express");
-const path = require("path");
 const app = express();
 
 /* Body middleware */
@@ -49,7 +48,7 @@ function millisToMinutesAndSeconds(millis) {
 
 /* REACT connection */
 
-app.use(express.static(path.join(__dirname, "client", "build"))));
+app.use(express.static("client\\build"));
 
 /* OR */
 
