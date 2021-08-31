@@ -29,13 +29,20 @@ const spotifyApi = new spotifyWebApi({
   redirectUri: `${process.env.adress}/callback`,
 });
 
+console.log(process.env.adress);
+
 /* CONSTANTS */
 /* Should be moved to another file */
 
 const PORT = process.env.PORT || 5000;
 const queue = [];
+
+/* --- */
+
 let currentPlayback = {};
 let added = false;
+let refreshTokenEvent;
+let currentTrackEvent;
 
 /* Helper functions */
 /* Should be moved to another file */
@@ -48,15 +55,13 @@ function millisToMinutesAndSeconds(millis) {
 
 /* REACT connection */
 
-app.use(express.static(__dirname + '/client/build'));
-
-console.log(__dirname + '/client/build');
+// app.use(express.static(__dirname + '/client/build'));
 
 /* OR */
 
-// app.get("/", (req, res) => {
-//   res.send("Hello world!");
-// });
+app.get("/", (req, res) => {
+  res.send("Hello world!");
+});
 
 /* On connection event socket.io */
 
@@ -94,7 +99,11 @@ app.get("/callback", (req, res) => {
 
       /* Token refresh cycle */
 
-      setInterval(() => {
+      if (refreshTokenEvent)
+        clearInterval(refreshTokenEvent);
+
+
+      refreshTokenEvent = setInterval(() => {
         spotifyApi
           .refreshAccessToken()
           .then((data) => {
@@ -108,7 +117,11 @@ app.get("/callback", (req, res) => {
 
       /* Current playback cycle, talks to frontend */
 
-      setInterval(() => {
+      if (currentTrackEvent)
+        clearInterval(currentTrackEvent);
+
+
+      currentTrackEvent = setInterval(() => {
         spotifyApi
           .getMyCurrentPlayingTrack()
           .then((data) => {
@@ -134,9 +147,9 @@ app.get("/callback", (req, res) => {
 
               if (
                 currentPlaybackDurationArr[0] ===
-                  currentPlaybackProgressArr[0] &&
+                currentPlaybackProgressArr[0] &&
                 currentPlaybackProgressArr[1] >
-                  currentPlaybackDurationArr[1] - 2 &&
+                currentPlaybackDurationArr[1] - 3 &&
                 added === false
               ) {
                 if (queue.length !== 0)
@@ -145,11 +158,11 @@ app.get("/callback", (req, res) => {
                     .then((data) => {
                       io.emit("current-queue", queue);
                     })
-                    .catch((err) => {});
+                    .catch((err) => { });
                 added = true;
                 setTimeout(() => {
                   added = false;
-                }, 3000);
+                }, 4000);
               }
 
               io.emit("current-playback", currentPlayback);
@@ -168,7 +181,7 @@ app.get("/callback", (req, res) => {
 
   /* Redirect to home page */
 
-  res.redirect(`${process.env.adress}`);
+  res.redirect(`${process.env.adress}`.replace('5000', '3000'));
 });
 
 /* Get a list of objects 
