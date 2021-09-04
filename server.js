@@ -55,13 +55,13 @@ function millisToMinutesAndSeconds(millis) {
 
 /* REACT connection */
 
-// app.use(express.static(__dirname + '/client/build'));
+app.use(express.static(__dirname + '/client/build'));
 
 /* OR */
 
-app.get("/", (req, res) => {
-  res.send("Hello world!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Hello world!");
+// });
 
 /* On connection event socket.io */
 
@@ -71,9 +71,6 @@ io.on("connection", (socket) => {
   socket.emit("current-playback", currentPlayback);
   socket.emit("current-queue", queue);
 });
-
-/* Login to Spotify */
-
 app.get("/login", (req, res) => {
   const scopes = [
     "user-modify-playback-state",
@@ -181,7 +178,7 @@ app.get("/callback", (req, res) => {
 
   /* Redirect to home page */
 
-  res.redirect(`${process.env.adress}`.replace('5000', '3000'));
+  res.redirect(`${process.env.adress}`/*.replace('5000', '3000')*/);
 });
 
 /* Get a list of objects 
